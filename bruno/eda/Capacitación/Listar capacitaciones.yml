@@ -1,0 +1,18 @@
+info:
+  name: Listar capacitaciones
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8084/api/v1/capacitaciones
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMTIwOTMsImV4cCI6MTc5MjAxNTY5M30.ynBgKcTieIdRH7M1aNDQSqxC_xP0pl9nqM0sVWh0yfs
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
