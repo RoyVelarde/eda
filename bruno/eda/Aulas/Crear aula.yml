@@ -1,0 +1,26 @@
+info:
+  name: Crear aula
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8083/api/v1/aulas
+  body:
+    type: json
+    data: |-
+      {
+        "codigo": "AULA-04",
+        "tipo": "APLICADOR",
+        "capacidad": 0
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjc19wcnVlYmEiLCJ1aWQiOiJiMTBjMTFmMS1mZGFiLTRjYjktOThhMS1lYWE1ZDgzODk5NDEiLCJyb2wiOiJDUyIsImlhdCI6MTc5MTk5NjI5MCwiZXhwIjoxNzkxOTk5ODkwfQ.T4JpfS_FCdm8BPSai9fbPsmf-cLh0VOWYW8b_XcFjKQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,14 +1,17 @@
 package pe.eda.personal.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import pe.eda.personal.dto.request.PersonalRequest;
+import pe.eda.personal.dto.response.ImportacionResponse;
 import pe.eda.personal.dto.response.PersonalResponse;
 import pe.eda.personal.enums.NivelPersonal;
+import pe.eda.personal.enums.TipoImportacion;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 public interface PersonalService {
-
     PersonalResponse registrar(PersonalRequest request);
 
     PersonalResponse buscarPorId(UUID id);
@@ -18,4 +21,6 @@ public interface PersonalService {
     List<PersonalResponse> listarTodos();
 
     List<PersonalResponse> listarPorNivel(NivelPersonal nivel);
+
+    ImportacionResponse importarExcel(MultipartFile archivo, TipoImportacion nivel) throws IOException;
 }

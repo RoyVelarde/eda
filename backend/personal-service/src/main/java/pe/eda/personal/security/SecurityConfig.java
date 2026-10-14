@@ -38,6 +38,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/personal/importaciones/**")
+                        .hasRole("CTS")
                         .requestMatchers(HttpMethod.POST, "/api/v1/personal")
                         .hasAnyRole("CTS", "CS")
                         .requestMatchers(HttpMethod.GET, "/api/v1/personal/**")

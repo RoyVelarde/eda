@@ -20,6 +20,7 @@ public class PersonalMapper {
                 personal.getCorreo(),
                 personal.getCargo(),
                 personal.getSituacion(),
+                personal.getRanking(),
                 personal.getFechaCreacion()
         );
     }

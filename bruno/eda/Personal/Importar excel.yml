@@ -1,0 +1,29 @@
+info:
+  name: Importar excel
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: http://localhost:8082/api/v1/personal/importaciones/importar
+  body:
+    type: multipart-form
+    data:
+      - name: archivo
+        type: file
+        value:
+          - D:\Apps\eda\docs\plantillas\personal_nivel_3.xlsx
+        contentType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - name: nivel
+        type: text
+        value: NIVEL_3
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5ODk2NjMsImV4cCI6MTc5MTk5MzI2M30.MezobrMYgaal2FMVikNukUKyzadEHWT2-t11ca13tUw
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

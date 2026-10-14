@@ -1,0 +1,18 @@
+info:
+  name: Listar aulas
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8083/api/v1/aulas
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjc19wcnVlYmEiLCJ1aWQiOiJiMTBjMTFmMS1mZGFiLTRjYjktOThhMS1lYWE1ZDgzODk5NDEiLCJyb2wiOiJDUyIsImlhdCI6MTc5MTk5NjI5MCwiZXhwIjoxNzkxOTk5ODkwfQ.T4JpfS_FCdm8BPSai9fbPsmf-cLh0VOWYW8b_XcFjKQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

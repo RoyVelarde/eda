@@ -1,0 +1,18 @@
+info:
+  name: Listar personal
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:8082/api/v1/personal
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5ODcxMzQsImV4cCI6MTc5MTk5MDczNH0.cWAia730BE-YJ_0yj2n0cQmF7ccFenSXwq3_2NPs1do
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

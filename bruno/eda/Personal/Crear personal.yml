@@ -1,0 +1,32 @@
+info:
+  name: Crear personal
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8082/api/v1/personal
+  body:
+    type: json
+    data: |-
+      {
+        "dni": "12345678",
+        "nivel": "NIVEL_2",
+        "apellidoPaterno": "Prueba",
+        "apellidoMaterno": "Desarrollo",
+        "nombres": "Usuario Demo",
+        "celular": "987654321",
+        "correo": "demo@example.com",
+        "cargo": "DOCENTE",
+        "situacion": "TITULAR"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5ODcxMzQsImV4cCI6MTc5MTk5MDczNH0.cWAia730BE-YJ_0yj2n0cQmF7ccFenSXwq3_2NPs1do
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

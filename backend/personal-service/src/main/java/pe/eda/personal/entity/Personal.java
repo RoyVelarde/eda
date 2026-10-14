@@ -39,6 +39,8 @@ public class Personal {
     @Column(nullable = false, length = 20)
     private NivelPersonal nivel;
 
+    private Integer ranking;
+
     @Column(name = "apellido_paterno", nullable = false, length = 100)
     private String apellidoPaterno;
 

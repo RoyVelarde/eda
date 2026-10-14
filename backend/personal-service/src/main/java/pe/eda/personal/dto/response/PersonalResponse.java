@@ -16,6 +16,7 @@ public record PersonalResponse(
         String correo,
         String cargo,
         String situacion,
+        Integer ranking,
         LocalDateTime fechaCreacion
 ) {
 }

@@ -1,0 +1,28 @@
+info:
+  name: Crear usuario
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/usuarios"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "cs_prueba",
+        "password": "Admin2026!",
+        "nombres": "Usuario",
+        "apellidos": "Prueba",
+        "rol": "CS"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5OTU1ODYsImV4cCI6MTc5MTk5OTE4Nn0.tX5uX1k6zcAlE6wisduDFXGq144GyhQTovOy8NoXyNc
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
