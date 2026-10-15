@@ -8,7 +8,7 @@ http:
   url: http://localhost:8084/api/v1/capacitaciones
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMTIwOTMsImV4cCI6MTc5MjAxNTY5M30.ynBgKcTieIdRH7M1aNDQSqxC_xP0pl9nqM0sVWh0yfs
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
 
 settings:
   encodeUrl: true

@@ -12,11 +12,11 @@ http:
       {
         "codigo": "AULA-04",
         "tipo": "APLICADOR",
-        "capacidad": 0
+        "capacidad": 30
       }
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjc19wcnVlYmEiLCJ1aWQiOiJiMTBjMTFmMS1mZGFiLTRjYjktOThhMS1lYWE1ZDgzODk5NDEiLCJyb2wiOiJDUyIsImlhdCI6MTc5MTk5NjI5MCwiZXhwIjoxNzkxOTk5ODkwfQ.T4JpfS_FCdm8BPSai9fbPsmf-cLh0VOWYW8b_XcFjKQ
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
 
 settings:
   encodeUrl: true

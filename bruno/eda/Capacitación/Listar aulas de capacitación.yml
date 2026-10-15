@@ -1,0 +1,18 @@
+info:
+  name: Listar aulas de capacitación
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: http://localhost:8084/api/v1/capacitaciones/6cd9c09f-0af9-4541-a54b-32922c9bb110/aulas
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

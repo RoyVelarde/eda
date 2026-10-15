@@ -1,0 +1,25 @@
+info:
+  name: Asignar tutor
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:8084/api/v1/capacitaciones/6cd9c09f-0af9-4541-a54b-32922c9bb110/aulas/385a5c86-115a-474d-a768-11e9a319f7eb/tutores
+  body:
+    type: json
+    data: |-
+      {
+        "personalId": "38fb6819-ad46-460a-b057-85dcbb0451f7",
+        "funcion": "RESPONSABLE"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

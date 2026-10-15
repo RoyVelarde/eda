@@ -48,15 +48,12 @@ public class AulaCapacitacion {
 
     @PrePersist
     public void prePersist() {
-
         if (id == null) {
             id = UUID.randomUUID();
         }
-
         if (activa == null) {
             activa = true;
         }
-
         if (fechaAsignacion == null) {
             fechaAsignacion = LocalDateTime.now();
         }

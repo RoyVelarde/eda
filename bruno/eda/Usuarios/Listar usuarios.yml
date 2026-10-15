@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/api/v1/usuarios"
+  url: http://localhost:8081/api/v1/usuarios
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5OTU1ODYsImV4cCI6MTc5MTk5OTE4Nn0.tX5uX1k6zcAlE6wisduDFXGq144GyhQTovOy8NoXyNc
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
 
 settings:
   encodeUrl: true

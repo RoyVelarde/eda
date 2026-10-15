@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8082/api/v1/personal/2d0fe3fc-bf6f-4251-97e6-46b931beeb11
+  url: http://localhost:8082/api/v1/personal/38fb6819-ad46-460a-b057-85dcbb0451f7
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTE5ODcxMzQsImV4cCI6MTc5MTk5MDczNH0.cWAia730BE-YJ_0yj2n0cQmF7ccFenSXwq3_2NPs1do
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
 
 settings:
   encodeUrl: true

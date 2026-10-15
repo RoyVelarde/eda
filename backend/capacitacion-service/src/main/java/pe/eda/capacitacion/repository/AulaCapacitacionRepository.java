@@ -1,6 +1,10 @@
 package pe.eda.capacitacion.repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import pe.eda.capacitacion.entity.AulaCapacitacion;
 
 import java.util.List;
@@ -27,4 +31,8 @@ public interface AulaCapacitacionRepository extends JpaRepository<AulaCapacitaci
             UUID capacitacionId,
             UUID aulaId
     );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT ac FROM AulaCapacitacion ac WHERE ac.id = :id AND ac.activa = true")
+    Optional<AulaCapacitacion> buscarActivaPorIdConBloqueo(@Param("id") UUID id);
 }

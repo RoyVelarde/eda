@@ -1,4 +1,1 @@
 name: local
-variables:
-  - name: baseUrl
-    value: http://localhost:8081
