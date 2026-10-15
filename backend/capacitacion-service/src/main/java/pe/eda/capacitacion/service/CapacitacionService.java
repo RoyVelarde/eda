@@ -17,4 +17,6 @@ public interface CapacitacionService {
     List<CapacitacionResponse> listarPorAnio(Integer anio);
 
     List<CapacitacionResponse> listarPorEstado(EstadoCapacitacion estado);
+
+    CapacitacionResponse iniciarCapacitacion(UUID id);
 }

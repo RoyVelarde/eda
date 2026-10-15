@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pe.eda.capacitacion.client.AulaClient;
 import pe.eda.capacitacion.client.PersonalClient;
 import pe.eda.capacitacion.dto.request.AsignacionParticipanteRequest;
+import pe.eda.capacitacion.dto.request.CambiarAsignacionParticipanteRequest;
 import pe.eda.capacitacion.dto.response.AsignacionParticipanteResponse;
 import pe.eda.capacitacion.entity.AsignacionParticipante;
 import pe.eda.capacitacion.entity.AulaCapacitacion;
@@ -129,4 +130,125 @@ public class AsignacionParticipanteServiceImpl implements AsignacionParticipante
                         + funcion.name() + "."
         );
     }
+
+    @Transactional
+    @Override
+    public AsignacionParticipanteResponse cambiarAsignacion(
+            UUID capacitacionId,
+            UUID asignacionId,
+            CambiarAsignacionParticipanteRequest request,
+            String token
+    ) {
+        Capacitacion capacitacion = capacitacionRepository
+                .findById(capacitacionId)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró la capacitación."
+                ));
+        if (capacitacion.getEstado() != EstadoCapacitacion.EN_CURSO) {
+            throw new ReglaNegocioException(
+                    "Solo se pueden modificar asignaciones de capacitaciones en curso."
+            );
+        }
+        AsignacionParticipante asignacion = asignacionRepository
+                .findById(asignacionId)
+                .filter(a -> Boolean.TRUE.equals(a.getActiva()))
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró una asignación activa con el ID indicado."
+                ));
+        if (!asignacion.getCapacitacion().getId().equals(capacitacionId)) {
+            throw new ReglaNegocioException(
+                    "La asignación no pertenece a esta capacitación."
+            );
+        }
+        FuncionParticipante funcion = FuncionParticipante.desdeTexto(
+                request.funcion()
+        );
+        AulaCapacitacion aulaDestino = aulaCapacitacionRepository
+                .buscarActivaPorIdConBloqueo(request.aulaCapacitacionId())
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró un aula de capacitación activa."
+                ));
+        if (!aulaDestino.getCapacitacion().getId().equals(capacitacionId)) {
+            throw new ReglaNegocioException(
+                    "El aula de destino no pertenece a esta capacitación."
+            );
+        }
+        AulaClient.AulaResponse aula = aulaClient.buscarPorId(
+                aulaDestino.getAulaId(),
+                token
+        );
+        if (aula == null || !Boolean.TRUE.equals(aula.activa())) {
+            throw new ReglaNegocioException(
+                    "El aula de destino está inactiva."
+            );
+        }
+        if (aula.capacidad() == null || aula.capacidad() <= 0) {
+            throw new ReglaNegocioException(
+                    "El aula de destino no tiene una capacidad válida."
+            );
+        }
+        if (!funcion.name().equalsIgnoreCase(aula.tipo())) {
+            throw new ReglaNegocioException(
+                    "La función " + funcion.name()
+                            + " no es compatible con el tipo del aula."
+            );
+        }
+        boolean mismaAula = asignacion.getAulaCapacitacion()
+                .getId()
+                .equals(aulaDestino.getId());
+        if (!mismaAula) {
+            long ocupacion = asignacionRepository
+                    .countByAulaCapacitacion_IdAndActivaTrue(
+                            aulaDestino.getId()
+                    );
+
+            if (ocupacion >= aula.capacidad()) {
+                throw new ReglaNegocioException(
+                        "El aula de destino no tiene capacidad disponible."
+                );
+            }
+        }
+        asignacion.setAulaCapacitacion(aulaDestino);
+        asignacion.setFuncion(funcion.name());
+        AsignacionParticipante actualizada = asignacionRepository.save(
+                asignacion
+        );
+        PersonalClient.PersonalResponse personal = personalClient.buscarPorId(
+                actualizada.getPersonalId(),
+                token
+        );
+        return mapper.toResponse(actualizada, personal, aula);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<AsignacionParticipanteResponse> listarPorCapacitacion(
+            UUID capacitacionId,
+            String token
+    ) {
+        capacitacionRepository.findById(capacitacionId)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró la capacitación."
+                ));
+        List<AsignacionParticipante> asignaciones =
+                asignacionRepository.findAllByCapacitacion_IdAndActivaTrue(
+                        capacitacionId
+                );
+        return asignaciones.stream()
+                .map(asignacion -> {
+                    PersonalClient.PersonalResponse personal =
+                            personalClient.buscarPorId(
+                                    asignacion.getPersonalId(),
+                                    token
+                            );
+
+                    AulaClient.AulaResponse aula = aulaClient.buscarPorId(
+                            asignacion.getAulaCapacitacion().getAulaId(),
+                            token
+                    );
+                    return mapper.toResponse(asignacion, personal, aula);
+                })
+                .toList();
+    }
+
 }

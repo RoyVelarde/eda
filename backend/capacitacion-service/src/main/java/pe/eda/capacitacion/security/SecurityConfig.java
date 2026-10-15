@@ -78,6 +78,14 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/api/v1/capacitaciones/*/codigo-reserva"
                         ).hasAnyRole("CTS", "CS", "CAS")
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/v1/capacitaciones/*/iniciar"
+                        ).hasRole("CTS")
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/v1/capacitaciones/*/participantes/*/asignacion"
+                        ).hasRole("CTS")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

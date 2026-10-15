@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8084/api/v1/capacitaciones/6cd9c09f-0af9-4541-a54b-32922c9bb110/aulas
+  url: http://localhost:8084/api/v1/capacitaciones/016e4aba-8011-41e7-b27b-8bc0f2f25f31/aulas
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwODE0MzQsImV4cCI6MTc5MjA4NTAzNH0.ys1zAx8UvKpVrTIrZ7_0Jhfo-Q5RthB5qGwN145p-YA
 
 settings:
   encodeUrl: true

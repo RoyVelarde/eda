@@ -5,16 +5,16 @@ info:
 
 http:
   method: POST
-  url: http://localhost:8084/api/v1/capacitaciones/6cd9c09f-0af9-4541-a54b-32922c9bb110/aulas
+  url: http://localhost:8084/api/v1/capacitaciones/016e4aba-8011-41e7-b27b-8bc0f2f25f31/aulas
   body:
     type: json
     data: |-
       {
-        "aulaId": "f2080ec4-9e6b-4839-ac61-38160eb33919"
+        "aulaId": "28edc84d-4beb-4966-9f3f-c8513313aa7d"
       }
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiJmMTUxZjBhZS03YTBiLTQ4ZDEtYmRmNS00YWVkYzM4OWMwOTciLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwMjY3MTAsImV4cCI6MTc5MjAzMDMxMH0.bFEOmB8keZpqZJKZpF7KjXmnYNLoRs_FEuz3Avaml6Q
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdHMiLCJ1aWQiOiI5ODI1YjRiMy01YmZiLTQ2MWQtOWEyOS0wNWUzNGFjOTdlZTgiLCJyb2wiOiJDVFMiLCJpYXQiOjE3OTIwODE0MzQsImV4cCI6MTc5MjA4NTAzNH0.ys1zAx8UvKpVrTIrZ7_0Jhfo-Q5RthB5qGwN145p-YA
 
 settings:
   encodeUrl: true

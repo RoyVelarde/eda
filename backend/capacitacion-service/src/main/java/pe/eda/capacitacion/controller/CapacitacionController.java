@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pe.eda.capacitacion.dto.request.CapacitacionRequest;
@@ -18,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("/api/v1/capacitaciones")
 @Validated
 public class CapacitacionController {
-
     private final CapacitacionService service;
 
     public CapacitacionController(CapacitacionService service) {
@@ -60,5 +60,11 @@ public class CapacitacionController {
             @PathVariable EstadoCapacitacion estado
     ) {
         return service.listarPorEstado(estado);
+    }
+
+    @PatchMapping("/{id}/iniciar")
+    @PreAuthorize("hasRole('CTS')")
+    public CapacitacionResponse iniciarCapacitacion(@PathVariable UUID id) {
+        return service.iniciarCapacitacion(id);
     }
 }

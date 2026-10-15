@@ -71,6 +71,23 @@ public class CapacitacionServiceImpl implements CapacitacionService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public CapacitacionResponse iniciarCapacitacion(UUID id) {
+        Capacitacion capacitacion = repository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No existe una capacitación con ID: " + id
+                ));
+        if (capacitacion.getEstado() != EstadoCapacitacion.PLANIFICADA) {
+            throw new ReglaNegocioException(
+                    "Solo se pueden iniciar capacitaciones en estado PLANIFICADA."
+            );
+        }
+        capacitacion.setEstado(EstadoCapacitacion.EN_CURSO);
+        Capacitacion actualizada = repository.save(capacitacion);
+        return mapper.toResponse(actualizada);
+    }
+
     private void validarFechas(CapacitacionRequest request) {
         if (request.fechaInicio() == null ||
                 request.fechaFin() == null ||
