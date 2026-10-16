@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import pe.eda.capacitacion.dto.request.AsignacionParticipanteRequest;
 import pe.eda.capacitacion.dto.response.AsignacionParticipanteResponse;
+import pe.eda.capacitacion.dto.response.ResumenIngresosResponse;
 import pe.eda.capacitacion.service.AsignacionParticipanteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,5 +62,15 @@ public class AsignacionParticipanteController {
                 capacitacionId,
                 token
         );
+    }
+
+    @GetMapping("/resumen")
+    @PreAuthorize("hasAnyRole('CTS', 'CS', 'CAS')")
+    public ResumenIngresosResponse obtenerResumenIngresos(
+            @PathVariable UUID capacitacionId,
+            JwtAuthenticationToken authentication
+    ) {
+        String token = authentication.getToken().getTokenValue();
+        return asignacionParticipanteService.obtenerResumenIngresos(capacitacionId, token);
     }
 }

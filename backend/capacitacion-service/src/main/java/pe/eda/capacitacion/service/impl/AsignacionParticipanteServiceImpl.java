@@ -8,6 +8,7 @@ import pe.eda.capacitacion.client.PersonalClient;
 import pe.eda.capacitacion.dto.request.AsignacionParticipanteRequest;
 import pe.eda.capacitacion.dto.request.CambiarAsignacionParticipanteRequest;
 import pe.eda.capacitacion.dto.response.AsignacionParticipanteResponse;
+import pe.eda.capacitacion.dto.response.ResumenIngresosResponse;
 import pe.eda.capacitacion.entity.AsignacionParticipante;
 import pe.eda.capacitacion.entity.AulaCapacitacion;
 import pe.eda.capacitacion.entity.Capacitacion;
@@ -222,10 +223,7 @@ public class AsignacionParticipanteServiceImpl implements AsignacionParticipante
 
     @Transactional(readOnly = true)
     @Override
-    public List<AsignacionParticipanteResponse> listarPorCapacitacion(
-            UUID capacitacionId,
-            String token
-    ) {
+    public List<AsignacionParticipanteResponse> listarPorCapacitacion(UUID capacitacionId, String token) {
         capacitacionRepository.findById(capacitacionId)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se encontró la capacitación."
@@ -241,7 +239,6 @@ public class AsignacionParticipanteServiceImpl implements AsignacionParticipante
                                     asignacion.getPersonalId(),
                                     token
                             );
-
                     AulaClient.AulaResponse aula = aulaClient.buscarPorId(
                             asignacion.getAulaCapacitacion().getAulaId(),
                             token
@@ -249,6 +246,49 @@ public class AsignacionParticipanteServiceImpl implements AsignacionParticipante
                     return mapper.toResponse(asignacion, personal, aula);
                 })
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResumenIngresosResponse obtenerResumenIngresos(
+            UUID capacitacionId,
+            String token
+    ) {
+        capacitacionRepository.findById(capacitacionId)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró la capacitación."
+                ));
+        List<AsignacionParticipante> asignaciones = asignacionRepository.findAllByCapacitacion_IdAndActivaTrue(
+                capacitacionId
+        );
+        long titulares = 0;
+        long reservas = 0;
+        long aplicadores = 0;
+        long orientadores = 0;
+        for (AsignacionParticipante asignacion : asignaciones) {
+            PersonalClient.PersonalResponse personal = personalClient.buscarPorId(
+                    asignacion.getPersonalId(),
+                    token
+            );
+            if ("TITULAR".equalsIgnoreCase(personal.situacion())) {
+                titulares++;
+            } else if ("RESERVA".equalsIgnoreCase(personal.situacion())) {
+                reservas++;
+            }
+            if ("APLICADOR".equalsIgnoreCase(asignacion.getFuncion())) {
+                aplicadores++;
+            } else if ("ORIENTADOR".equalsIgnoreCase(asignacion.getFuncion())) {
+                orientadores++;
+            }
+        }
+        return new ResumenIngresosResponse(
+                capacitacionId,
+                asignaciones.size(),
+                titulares,
+                reservas,
+                aplicadores,
+                orientadores
+        );
     }
 
 }

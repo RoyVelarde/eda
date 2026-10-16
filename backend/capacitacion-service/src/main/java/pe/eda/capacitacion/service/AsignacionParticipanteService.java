@@ -3,6 +3,7 @@ package pe.eda.capacitacion.service;
 import pe.eda.capacitacion.dto.request.AsignacionParticipanteRequest;
 import pe.eda.capacitacion.dto.response.AsignacionParticipanteResponse;
 import pe.eda.capacitacion.dto.request.CambiarAsignacionParticipanteRequest;
+import pe.eda.capacitacion.dto.response.ResumenIngresosResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,11 @@ public interface AsignacionParticipanteService {
     );
 
     List<AsignacionParticipanteResponse> listarPorCapacitacion(
+            UUID capacitacionId,
+            String token
+    );
+
+    ResumenIngresosResponse obtenerResumenIngresos(
             UUID capacitacionId,
             String token
     );
