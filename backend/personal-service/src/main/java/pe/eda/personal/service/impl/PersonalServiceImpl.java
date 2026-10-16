@@ -106,7 +106,6 @@ public class PersonalServiceImpl implements PersonalService {
                     validacion.errores()
             );
         }
-
         List<List<String>> filas = excelPersonalReader.leerFilas(archivo);
         if (filas.size() <= 1) {
             return new ImportacionResponse(
@@ -119,39 +118,6 @@ public class PersonalServiceImpl implements PersonalService {
                     0,
                     0,
                     List.of()
-            );
-        }
-
-        Set<String> dnisArchivo = new HashSet<>();
-        List<String> errores = new ArrayList<>();
-        int indiceDni = nivel == TipoImportacion.NIVEL_2 ? 3 : 4;
-        for (int i = 1; i < filas.size(); i++) {
-            List<String> fila = filas.get(i);
-            if (fila.stream().allMatch(
-                    valor -> valor == null || valor.isBlank())) {
-                continue;
-            }
-            String dni = fila.get(indiceDni).trim();
-            if (!dnisArchivo.add(dni)) {
-                errores.add(
-                        "Fila " + (i + 1)
-                                + ": el DNI " + dni
-                                + " está repetido en el archivo."
-                );
-            }
-        }
-
-        if (!errores.isEmpty()) {
-            return new ImportacionResponse(
-                    archivo.getOriginalFilename(),
-                    nivel.name(),
-                    false,
-                    validacion.totalFilas(),
-                    validacion.filasValidas() - errores.size(),
-                    errores.size(),
-                    0,
-                    0,
-                    errores
             );
         }
         int registrosNuevos = 0;

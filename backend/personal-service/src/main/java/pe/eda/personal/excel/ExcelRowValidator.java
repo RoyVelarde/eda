@@ -8,12 +8,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.text.Normalizer;
+import java.util.Locale;
+import java.util.Set;
 
 @Component
 public class ExcelRowValidator {
     private static final Pattern DNI_PATTERN = Pattern.compile("\\d{8}");
     private static final Pattern CELULAR_PATTERN = Pattern.compile("\\d{7,15}");
     private static final Pattern CORREO_PATTERN = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+    private static final Set<String> CARGOS_NIVEL_2 = Set.of("CAL", "CAE", "CTL");
+    private static final Set<String> CARGOS_NIVEL_3 = Set.of("APLICADOR", "ORIENTADOR", "OPERADOR TECNOLOGICO");
 
     public List<String> validar(List<List<String>> filas, TipoImportacion tipo) {
         List<String> errores = new ArrayList<>();
@@ -46,6 +51,18 @@ public class ExcelRowValidator {
             }
             if (cargo.isBlank()) {
                 errores.add("Fila " + numeroFila + ": falta el cargo.");
+            } else {
+                String cargoNormalizado = normalizarTexto(cargo);
+                Set<String> cargosPermitidos = tipo == TipoImportacion.NIVEL_2
+                        ? CARGOS_NIVEL_2
+                        : CARGOS_NIVEL_3;
+                if (!cargosPermitidos.contains(cargoNormalizado)) {
+                    errores.add(
+                            "Fila " + numeroFila
+                                    + ": el cargo '" + cargo
+                                    + "' no está permitido para " + tipo.name() + "."
+                    );
+                }
             }
             if (!DNI_PATTERN.matcher(dni).matches()) {
                 errores.add("Fila " + numeroFila + ": el DNI debe tener exactamente 8 dígitos.");
@@ -94,5 +111,11 @@ public class ExcelRowValidator {
 
     private boolean vacio(String valor) {
         return valor == null || valor.isBlank();
+    }
+
+    private String normalizarTexto(String texto) {
+        return Normalizer.normalize(texto.trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toUpperCase(Locale.ROOT);
     }
 }

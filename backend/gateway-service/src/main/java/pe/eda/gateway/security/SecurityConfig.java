@@ -9,8 +9,12 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Base64;
+import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -25,7 +29,9 @@ public class SecurityConfig {
                     "La variable JWT_SECRET no está configurada."
             );
         }
+
         byte[] secretBytes;
+
         try {
             secretBytes = Base64.getDecoder().decode(jwtSecret);
         } catch (IllegalArgumentException ex) {
@@ -34,16 +40,19 @@ public class SecurityConfig {
                     ex
             );
         }
+
         if (secretBytes.length < 32) {
             throw new IllegalStateException(
                     "La clave JWT decodificada debe tener al menos 32 bytes para HS256."
             );
         }
+
         javax.crypto.SecretKey secretKey =
                 new javax.crypto.spec.SecretKeySpec(
                         secretBytes,
                         "HmacSHA256"
                 );
+
         return NimbusReactiveJwtDecoder
                 .withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.HS256)
@@ -51,10 +60,49 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:5173")
+        );
+
+        configuration.setAllowedMethods(
+                List.of(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "PATCH",
+                        "DELETE",
+                        "OPTIONS"
+                )
+        );
+
+        configuration.setAllowedHeaders(
+                List.of(
+                        "Authorization",
+                        "Content-Type",
+                        "Accept"
+                )
+        );
+
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
+    @Bean
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http
     ) {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)

@@ -55,7 +55,7 @@ public class ExcelValidationService {
             }
         }
         int totalConError = filasConError.size();
-        int filasValidas = Math.max(totalFilas - totalConError, 0);
+        int filasValidas = totalFilas - totalConError;
         int registrosNuevos = 0;
         int registrosExistentes = 0;
         if (filasValidas > 0) {
@@ -70,7 +70,13 @@ public class ExcelValidationService {
                 if (filasConError.contains(numeroFila)) {
                     continue;
                 }
+                if (fila.size() <= indiceDni || fila.get(indiceDni) == null) {
+                    continue;
+                }
                 String dni = fila.get(indiceDni).trim();
+                if (dni.isBlank()) {
+                    continue;
+                }
                 if (personalRepository.existsByDni(dni)) {
                     registrosExistentes++;
                 } else {
