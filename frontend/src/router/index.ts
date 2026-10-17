@@ -36,16 +36,30 @@ const routes: RouteRecordRaw[] = [
         props: { titulo: 'Personal' },
       },
       {
+        path: 'personal/:id',
+        name: 'personal-detalle',
+        component: () => import('@/views/personal/PersonalDetalleView.vue'),
+      },
+      {
         path: 'aulas',
         name: 'aulas',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
-        props: { titulo: 'Aulas' },
+        component: () => import('@/views/aula/AulasView.vue'),
       },
       {
         path: 'capacitaciones',
         name: 'capacitaciones',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
+        component: () => import('@/views/capacitacion/CapacitacionView.vue'),
         props: { titulo: 'Capacitaciones' },
+      },
+      {
+        path: 'asignacion-tutores',
+        name: 'asignacion-tutores',
+        component: () => import('@/views/capacitacion/AsignacionTutoresView.vue'),
+      },
+      {
+        path: 'asignacion-participantes',
+        name: 'asignacion-participantes',
+        component: () => import('@/views/capacitacion/AsignacionParticipantesView.vue'),
       },
       {
         path: 'participantes',
@@ -61,6 +75,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
   // Página no encontrada
   {
     path: '/:pathMatch(.*)*',

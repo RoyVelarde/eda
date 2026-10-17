@@ -12,6 +12,8 @@ import {
   UserRound,
   UsersRound,
   ChartColumnIncreasing,
+  ClipboardCheck,
+  UserCog,
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -24,6 +26,16 @@ const menu = [
   { nombre: 'Personal', ruta: '/personal', icono: UsersRound },
   { nombre: 'Aulas', ruta: '/aulas', icono: Building2 },
   { nombre: 'Capacitaciones', ruta: '/capacitaciones', icono: BookOpen },
+  {
+    nombre: 'Asignación de tutores',
+    ruta: '/asignacion-tutores',
+    icono: UserCog,
+  },
+  {
+    nombre: 'Asignación de participantes',
+    ruta: '/asignacion-participantes',
+    icono: ClipboardCheck,
+  },
   { nombre: 'Participantes', ruta: '/participantes', icono: ClipboardList },
   { nombre: 'Reportes', ruta: '/reportes', icono: ChartColumnIncreasing },
 ]
@@ -38,9 +50,7 @@ function cerrarSesion() {
   <aside class="flex h-full w-64 flex-col bg-[#123f3b] text-white">
     <!-- Logo -->
     <div class="flex items-center gap-3 border-b border-white/10 px-5 py-6">
-      <div
-        class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#17665e]"
-      >
+      <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#17665e]">
         <GraduationCap :size="25" />
       </div>
 
@@ -65,16 +75,14 @@ function cerrarSesion() {
         exact-active-class="bg-[#17665e] text-white"
       >
         <component :is="item.icono" :size="19" />
-        {{ item.nombre }}
+        <span>{{ item.nombre }}</span>
       </RouterLink>
     </nav>
 
     <!-- Usuario -->
     <div class="border-t border-white/10 p-4">
       <div class="mb-4 flex items-center gap-3">
-        <div
-          class="flex h-10 w-10 items-center justify-center rounded-full bg-[#17665e]"
-        >
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#17665e]">
           <UserRound :size="20" />
         </div>
 
