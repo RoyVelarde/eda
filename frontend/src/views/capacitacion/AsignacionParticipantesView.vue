@@ -7,7 +7,6 @@ import {
   DoorOpen,
   KeyRound,
   LoaderCircle,
-  RefreshCw,
   Search,
   UserRound,
   Users,
@@ -23,7 +22,7 @@ import { asignacionParticipanteService } from '@/services/asignacionParticipante
 import type { Capacitacion } from '@/types/capacitacion'
 import type { AulaCapacitacion } from '@/types/asignacionTutor'
 import type { Personal } from '@/types/personal'
-import type { AsignacionParticipanteResponse } from '@/services/asignacionParticipanteService'
+import type { AsignacionParticipanteResponse } from '@/types/asignacionParticipante'
 
 type TipoAula = 'APLICADOR' | 'ORIENTADOR'
 
@@ -87,10 +86,6 @@ const aulasTipo = computed<AulaCapacitacion[]>(() => {
   return aulas.value.filter((aula) => {
     return aula.activa && aula.tipoAula.trim().toUpperCase() === tipo
   })
-})
-
-const primeraAulaTipo = computed<AulaCapacitacion | null>(() => {
-  return aulasTipo.value[0] ?? null
 })
 
 const participanteTieneCargoValido = computed(() => {
@@ -475,8 +470,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#edf5f3] p-4 sm:p-6 lg:p-8">
-    <div class="mx-auto max-w-7xl space-y-6">
+  <main class="min-h-screen bg-[#edf5f3] p-4 md:p-6 xl:p-8">
+    <div class="mx-auto w-full max-w-[1600px] space-y-6">
       <!-- Encabezado -->
       <header class="rounded-2xl bg-[#17665e] p-6 text-white shadow-sm sm:p-8">
         <div class="flex items-center gap-4">
@@ -922,5 +917,5 @@ onMounted(async () => {
         el control del aforo dependen de la respuesta y las reglas del backend.
       </footer>
     </div>
-  </div>
+  </main>
 </template>

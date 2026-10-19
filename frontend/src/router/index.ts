@@ -10,15 +10,12 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
-  // Página pública de inicio de sesión
   {
     path: '/login',
     name: 'login',
     component: () => import('@/views/auth/LoginView.vue'),
     meta: { public: true },
   },
-
-  // Páginas privadas con menú lateral
   {
     path: '/',
     component: () => import('@/layouts/AppLayout.vue'),
@@ -49,7 +46,6 @@ const routes: RouteRecordRaw[] = [
         path: 'capacitaciones',
         name: 'capacitaciones',
         component: () => import('@/views/capacitacion/CapacitacionView.vue'),
-        props: { titulo: 'Capacitaciones' },
       },
       {
         path: 'asignacion-tutores',
@@ -62,21 +58,17 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/capacitacion/AsignacionParticipantesView.vue'),
       },
       {
-        path: 'participantes',
-        name: 'participantes',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
-        props: { titulo: 'Participantes' },
+        path: '/asignacion-aulas',
+        name: 'asignacion-aulas',
+        component: () => import('@/views/aula/AulaCapacitacionView.vue'),
       },
       {
-        path: 'reportes',
-        name: 'reportes',
-        component: () => import('@/views/ModulePlaceholderView.vue'),
-        props: { titulo: 'Reportes' },
+        path: '/participantes',
+        name: 'participantes',
+        component: () => import('@/views/reporte/ParticipantesView.vue'),
       },
     ],
   },
-
-  // Página no encontrada
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
@@ -92,13 +84,9 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()
-
-  // Eliminar una sesión vencida
   if (authStore.accessToken && !authStore.autenticado) {
     authStore.cerrarSesion()
   }
-
-  // Proteger las páginas privadas
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!authStore.autenticado) {
       return {
@@ -107,12 +95,9 @@ router.beforeEach((to) => {
       }
     }
   }
-
-  // Evitar que un usuario autenticado vuelva al login
   if (to.name === 'login' && authStore.autenticado) {
     return { name: 'dashboard' }
   }
-
   return true
 })
 

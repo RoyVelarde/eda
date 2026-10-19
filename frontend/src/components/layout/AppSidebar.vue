@@ -11,8 +11,8 @@ import {
   LogOut,
   UserRound,
   UsersRound,
-  ChartColumnIncreasing,
   ClipboardCheck,
+  DoorOpen,
   UserCog,
 } from 'lucide-vue-next'
 
@@ -26,18 +26,10 @@ const menu = [
   { nombre: 'Personal', ruta: '/personal', icono: UsersRound },
   { nombre: 'Aulas', ruta: '/aulas', icono: Building2 },
   { nombre: 'Capacitaciones', ruta: '/capacitaciones', icono: BookOpen },
-  {
-    nombre: 'Asignación de tutores',
-    ruta: '/asignacion-tutores',
-    icono: UserCog,
-  },
-  {
-    nombre: 'Asignación de participantes',
-    ruta: '/asignacion-participantes',
-    icono: ClipboardCheck,
-  },
+  { nombre: 'Asignación de aulas', ruta: '/asignacion-aulas', icono: ClipboardCheck },
+  { nombre: 'Asignación de tutores', ruta: '/asignacion-tutores', icono: UserCog },
+  { nombre: 'Asignación de participantes', ruta: '/asignacion-participantes', icono: DoorOpen },
   { nombre: 'Participantes', ruta: '/participantes', icono: ClipboardList },
-  { nombre: 'Reportes', ruta: '/reportes', icono: ChartColumnIncreasing },
 ]
 
 function cerrarSesion() {

@@ -1,3 +1,4 @@
+```vue
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import {
@@ -6,15 +7,16 @@ import {
   CheckCircle2,
   CircleAlert,
   Clock3,
+  KeyRound,
   LoaderCircle,
   Plus,
-  RefreshCw,
   Search,
   X,
 } from 'lucide-vue-next'
 
 import Swal from 'sweetalert2'
 import { capacitacionService } from '@/services/capacitacionService'
+import { asignacionParticipanteService } from '@/services/asignacionParticipanteService'
 import type { Capacitacion, CapacitacionRequest, EstadoCapacitacion } from '@/types/capacitacion'
 
 const capacitaciones = ref<Capacitacion[]>([])
@@ -29,6 +31,7 @@ const filtroAnio = ref('')
 const filtroEstado = ref<EstadoCapacitacion | ''>('')
 
 const modalAbierto = ref(false)
+const codigoReserva = ref('')
 
 const formulario = ref<CapacitacionRequest>({
   nombre: '',
@@ -84,7 +87,11 @@ function obtenerMensajeError(err: unknown): string {
     const respuesta = (
       err as {
         response?: {
-          data?: { message?: string; detail?: string; error?: string }
+          data?: {
+            message?: string
+            detail?: string
+            error?: string
+          }
         }
       }
     ).response
@@ -123,6 +130,7 @@ function abrirModal() {
     fechaFin: '',
   }
 
+  codigoReserva.value = ''
   mensaje.value = ''
   error.value = ''
   modalAbierto.value = true
@@ -139,6 +147,7 @@ function validarFormulario(): boolean {
   const nuevosErrores: Record<string, string> = {}
   const nombre = formulario.value.nombre.trim()
   const anio = formulario.value.anio
+  const codigo = codigoReserva.value.trim()
 
   if (!nombre) {
     nuevosErrores.nombre = 'El nombre es obligatorio.'
@@ -166,6 +175,12 @@ function validarFormulario(): boolean {
     nuevosErrores.fechaFin = 'La fecha de fin no puede ser anterior a la fecha de inicio.'
   }
 
+  if (!codigo) {
+    nuevosErrores.codigoReserva = 'El código de reserva es obligatorio.'
+  } else if (codigo.length < 6 || codigo.length > 100) {
+    nuevosErrores.codigoReserva = 'El código debe tener entre 6 y 100 caracteres.'
+  }
+
   erroresFormulario.value = nuevosErrores
 
   return Object.keys(nuevosErrores).length === 0
@@ -179,6 +194,8 @@ async function registrarCapacitacion() {
 
   guardando.value = true
 
+  let capacitacionCreada: Capacitacion | null = null
+
   try {
     const datos: CapacitacionRequest = {
       nombre: formulario.value.nombre.trim(),
@@ -187,14 +204,42 @@ async function registrarCapacitacion() {
       fechaFin: formulario.value.fechaFin,
     }
 
-    await capacitacionService.registrar(datos)
+    // Primera operación: registrar la capacitación.
+    capacitacionCreada = await capacitacionService.registrar(datos)
+
+    // Segunda operación: configurar el código para esa capacitación.
+    await asignacionParticipanteService.configurarCodigoReserva(capacitacionCreada.id, {
+      codigo: codigoReserva.value.trim(),
+    })
 
     modalAbierto.value = false
-    mensaje.value = 'La capacitación se registró correctamente.'
+    codigoReserva.value = ''
+    erroresFormulario.value = {}
 
     await cargarCapacitaciones()
+
+    await Swal.fire({
+      title: '¡Capacitación registrada!',
+      text: 'La capacitación y su código de reserva se registraron correctamente.',
+      icon: 'success',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#17665e',
+    })
   } catch (err: unknown) {
-    error.value = obtenerMensajeError(err)
+    if (capacitacionCreada) {
+      // La capacitación ya existe; no debemos volver a registrarla.
+      await cargarCapacitaciones()
+
+      await Swal.fire({
+        title: 'Capacitación creada, código pendiente',
+        text: 'La capacitación se registró correctamente, pero no se pudo configurar su código de reserva. No vuelvas a registrar la capacitación. Puedes reintentar la configuración del código desde la gestión de reservas.',
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#17665e',
+      })
+    } else {
+      error.value = obtenerMensajeError(err)
+    }
   } finally {
     guardando.value = false
   }
@@ -224,6 +269,8 @@ async function iniciarCapacitacion(capacitacion: Capacitacion) {
 
   if (!confirmacion.isConfirmed) return
 
+  iniciandoId.value = capacitacion.id
+
   try {
     await capacitacionService.iniciar(capacitacion.id)
 
@@ -236,38 +283,16 @@ async function iniciarCapacitacion(capacitacion: Capacitacion) {
     })
 
     await cargarCapacitaciones()
-  } catch (error: unknown) {
-    const mensaje =
-      typeof error === 'object' && error !== null && 'response' in error
-        ? (() => {
-            const respuesta = (
-              error as {
-                response?: {
-                  data?: {
-                    message?: string
-                    detail?: string
-                    error?: string
-                  }
-                }
-              }
-            ).response?.data
-
-            return (
-              respuesta?.message ??
-              respuesta?.detail ??
-              respuesta?.error ??
-              'No fue posible iniciar la capacitación.'
-            )
-          })()
-        : 'No fue posible iniciar la capacitación.'
-
+  } catch (err: unknown) {
     await Swal.fire({
       title: 'No se pudo iniciar',
-      text: mensaje,
+      text: obtenerMensajeError(err),
       icon: 'error',
       confirmButtonText: 'Entendido',
       confirmButtonColor: '#17665e',
     })
+  } finally {
+    iniciandoId.value = null
   }
 }
 
@@ -306,7 +331,7 @@ onMounted(cargarCapacitaciones)
 </script>
 
 <template>
-  <main class="min-h-full space-y-6 bg-[#edf5f3] p-4 sm:p-6 lg:p-8">
+  <main class="min-h-screen bg-[#edf5f3] p-4 md:p-6 xl:p-8">
     <!-- Encabezado -->
     <section
       class="flex flex-col gap-4 rounded-2xl bg-[#17665e] p-6 text-white shadow-sm sm:flex-row sm:items-center sm:justify-between"
@@ -390,16 +415,6 @@ onMounted(cargarCapacitaciones)
             Consulta y filtra las capacitaciones disponibles.
           </p>
         </div>
-
-        <button
-          type="button"
-          class="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-[#dbe9e5] px-3 py-2 text-sm font-medium text-[#17665e] transition hover:bg-[#edf5f3] disabled:cursor-not-allowed disabled:opacity-50 lg:self-auto"
-          :disabled="cargando"
-          @click="cargarCapacitaciones"
-        >
-          <RefreshCw class="h-4 w-4" :class="{ 'animate-spin': cargando }" />
-          Actualizar
-        </button>
       </div>
 
       <!-- Filtros -->
@@ -485,7 +500,7 @@ onMounted(cargarCapacitaciones)
           <BookOpen class="h-8 w-8" />
         </span>
 
-        <h3 class="mt-4 font-semibold text-[#123f3b]">Aún no hay capacitaciones</h3>
+        <h3 class="mt-4 font-semibold text-[#123f3b}">Aún no hay capacitaciones</h3>
 
         <p class="mt-2 max-w-sm text-sm text-slate-500">
           Registra la primera capacitación para comenzar a organizar las actividades.
@@ -635,7 +650,7 @@ onMounted(cargarCapacitaciones)
               </h2>
 
               <p class="mt-1 text-sm text-slate-500">
-                Completa los datos para registrar una capacitación.
+                Completa los datos y configura el código de reserva.
               </p>
             </div>
 
@@ -651,6 +666,7 @@ onMounted(cargarCapacitaciones)
           </header>
 
           <form class="space-y-5 p-5 sm:p-6" @submit.prevent="registrarCapacitacion">
+            <!-- Nombre -->
             <div>
               <label
                 for="nombre-capacitacion"
@@ -683,6 +699,7 @@ onMounted(cargarCapacitaciones)
               </p>
             </div>
 
+            <!-- Año -->
             <div>
               <label
                 for="anio-capacitacion"
@@ -709,6 +726,52 @@ onMounted(cargarCapacitaciones)
               </p>
             </div>
 
+            <!-- Código de reserva -->
+            <div>
+              <label for="codigo-reserva" class="mb-1.5 block text-sm font-semibold text-[#123f3b]">
+                Código de reserva
+                <span class="text-red-500">*</span>
+              </label>
+
+              <div class="relative">
+                <KeyRound
+                  class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                />
+
+                <input
+                  id="codigo-reserva"
+                  v-model="codigoReserva"
+                  type="password"
+                  minlength="6"
+                  maxlength="100"
+                  autocomplete="new-password"
+                  required
+                  placeholder="Ingresa el código para esta capacitación"
+                  class="w-full rounded-xl border border-[#dbe9e5] py-3 pl-10 pr-3.5 text-sm text-[#123f3b] outline-none transition placeholder:text-slate-400 focus:border-[#17665e] focus:ring-2 focus:ring-[#17665e]/10"
+                  :aria-invalid="Boolean(erroresFormulario.codigoReserva)"
+                  :aria-describedby="
+                    erroresFormulario.codigoReserva
+                      ? 'error-codigo-reserva'
+                      : 'ayuda-codigo-reserva'
+                  "
+                />
+              </div>
+
+              <p
+                v-if="erroresFormulario.codigoReserva"
+                id="error-codigo-reserva"
+                class="mt-1.5 text-xs text-red-600"
+              >
+                {{ erroresFormulario.codigoReserva }}
+              </p>
+
+              <p id="ayuda-codigo-reserva" class="mt-1.5 text-xs leading-5 text-slate-500">
+                Este código pertenecerá exclusivamente a esta capacitación. Debe tener entre 6 y 100
+                caracteres.
+              </p>
+            </div>
+
+            <!-- Fechas -->
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
                 <label
@@ -757,13 +820,15 @@ onMounted(cargarCapacitaciones)
               </div>
             </div>
 
+            <!-- Información -->
             <div
               class="rounded-xl border border-[#dbe9e5] bg-[#f5f9f8] p-3.5 text-xs leading-5 text-slate-600"
             >
-              El estado inicial se asigna automáticamente según las reglas del backend. La
-              capacitación podrá iniciarse desde la tabla cuando corresponda.
+              La capacitación se registrará primero y después se configurará su código de reserva.
+              El código no se mostrará en el listado.
             </div>
 
+            <!-- Acciones -->
             <div
               class="flex flex-col-reverse gap-3 border-t border-[#e7efec] pt-5 sm:flex-row sm:justify-end"
             >
@@ -792,3 +857,4 @@ onMounted(cargarCapacitaciones)
     </Teleport>
   </main>
 </template>
+```
